@@ -10,37 +10,47 @@ const victims = [
 
 export default function VictimList() {
     return (
-        <div className="panel" style={{ padding: '1rem', height: '100%', overflowY: 'auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3 className="text-neon" style={{ fontSize: '0.9rem' }}>CONNECTED TARGETS</h3>
-                <span className="mono text-dim" style={{ fontSize: '0.7rem' }}>TOTAL: {victims.length}</span>
+        <div className="panel" style={{ padding: '1.5rem', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h3 className="text-neon" style={{ fontSize: '1.2rem' }}>CONNECTED TARGETS</h3>
+                <span className="mono text-dim" style={{ fontSize: '0.8rem', border: '1px solid #333', padding: '2px 8px' }}>
+                    NODES: <span style={{ color: '#fff' }}>{victims.length}</span>
+                </span>
             </div>
 
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', textAlign: 'left' }}>
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 4px', fontSize: '0.85rem', textAlign: 'left' }}>
                 <thead>
-                    <tr style={{ borderBottom: '1px solid #333', color: '#666' }}>
+                    <tr className="mono" style={{ color: 'var(--text-dim)', fontSize: '0.75rem', textTransform: 'uppercase' }}>
                         <th style={{ padding: '8px' }}>ID</th>
                         <th style={{ padding: '8px' }}>IP ADDRESS</th>
                         <th style={{ padding: '8px' }}>SYSTEM</th>
                         <th style={{ padding: '8px' }}>STATUS</th>
-                        <th style={{ padding: '8px' }}>LATENCY</th>
-                        <th style={{ padding: '8px' }}>ACTION</th>
+                        <th style={{ padding: '8px' }}>PING</th>
+                        <th style={{ padding: '8px', textAlign: 'right' }}>ACTION</th>
                     </tr>
                 </thead>
                 <tbody className="mono">
                     {victims.map((v) => (
-                        <tr key={v.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
-                            <td style={{ padding: '8px' }}>{v.id}</td>
-                            <td style={{ padding: '8px', color: '#ccc' }}>{v.ip}</td>
-                            <td style={{ padding: '8px' }}>{v.os}</td>
-                            <td style={{ padding: '8px' }}>
-                                <span className={v.status === 'ONLINE' || v.status === 'ACTIVE' ? 'text-neon' : v.status === 'OFFLINE' ? 'text-alert' : 'text-dim'}>
-                                    {v.status}
+                        <tr key={v.id} style={{ background: 'rgba(255,255,255,0.02)', transition: 'all 0.2s' }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0, 255, 65, 0.05)'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                        >
+                            <td style={{ padding: '10px', borderLeft: v.status === 'ONLINE' ? '2px solid var(--primary-color)' : '2px solid transparent' }}>
+                                <span style={{ color: '#fff', fontWeight: 'bold' }}>{v.id}</span>
+                            </td>
+                            <td style={{ padding: '10px', color: '#888' }}>{v.ip}</td>
+                            <td style={{ padding: '10px' }}>{v.os}</td>
+                            <td style={{ padding: '10px' }}>
+                                <span style={{
+                                    color: v.status === 'ONLINE' || v.status === 'ACTIVE' ? 'var(--primary-color)' : v.status === 'OFFLINE' ? 'var(--alert-color)' : '#888',
+                                    textShadow: (v.status === 'ONLINE' || v.status === 'ACTIVE') ? '0 0 5px var(--primary-color)' : 'none'
+                                }}>
+                                    {v.status === 'ONLINE' ? '● ONLINE' : v.status}
                                 </span>
                             </td>
-                            <td style={{ padding: '8px' }}>{v.ping}</td>
-                            <td style={{ padding: '8px' }}>
-                                <button className="btn" style={{ fontSize: '0.6rem', padding: '2px 6px' }}>CMD</button>
+                            <td style={{ padding: '10px' }}>{v.ping}</td>
+                            <td style={{ padding: '10px', textAlign: 'right' }}>
+                                <button className="btn btn-sm">EXECUTE</button>
                             </td>
                         </tr>
                     ))}
