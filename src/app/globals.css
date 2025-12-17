@@ -1,0 +1,116 @@
+:root {
+  --bg-color: #050505;
+  --bg-panel: #0a0a0a;
+  --bg-panel-transparent: rgba(10, 10, 10, 0.95);
+  --primary-color: #00ff41; /* Cyber Green */
+  --secondary-color: #008F11; /* Darker Green */
+  --alert-color: #ff003c; /* Cyber Red */
+  --text-main: #e0e0e0;
+  --text-dim: #888;
+  --grid-line: #1a1a1a;
+  --border-color: #333;
+  --font-main: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  margin: 0;
+  overflow: hidden; /* App-like feel */
+  background-image: 
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Utilities */
+.text-neon {
+  color: var(--primary-color);
+  text-shadow: 0 0 5px var(--primary-color);
+}
+
+.text-alert {
+  color: var(--alert-color);
+  text-shadow: 0 0 5px var(--alert-color);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.panel {
+  background: var(--bg-panel-transparent);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: var(--primary-color);
+  color: #000;
+  box-shadow: 0 0 15px var(--primary-color);
+}
+
+.btn-danger {
+  border-color: var(--alert-color);
+  color: var(--alert-color);
+}
+
+.btn-danger:hover {
+  background: var(--alert-color);
+  color: #000;
+  box-shadow: 0 0 15px var(--alert-color);
+}
+
+/* Animations */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color); 
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color); 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color); 
+}
