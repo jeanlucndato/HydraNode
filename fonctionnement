@@ -1,0 +1,48 @@
+D'un point de vue technique en cybersécurité, **Vibeware** ne se comporte pas comme un logiciel classique, mais comme un **système distribué furtif**. Son efficacité repose sur la séparation stricte entre l'action (l'Implant), le contrôle (le C2) et la gestion (le Dashboard).
+
+Voici l'explication technique simplifiée du cycle de fonctionnement :
+
+### 1. La Phase d'Infiltration : L'Implant Rust
+
+L'implant est le "soldat" envoyé sur la machine cible.
+
+* **Pourquoi Rust ?** Contrairement au C++, Rust empêche les erreurs de mémoire (buffer overflows) qui pourraient faire planter le programme et alerter l'utilisateur.
+* **Exécution "Fileless" :** L'implant est conçu pour être injecté directement dans la mémoire vive (RAM) d'un processus légitime (comme un navigateur web). Comme il n'y a pas de fichier sur le disque dur, les antivirus traditionnels qui scannent les fichiers ne voient rien.
+* **Obscurcissement :** Le code est compilé de manière à ce que les chaînes de caractères (comme les adresses IP du serveur) soient chiffrées jusqu'au moment de leur utilisation.
+
+---
+
+### 2. La Communication : Le "Beaconing" (Balisage)
+
+C'est ici que Vibeware évite la détection par les analystes réseau (SOC).
+
+* **Le principe du silence :** Un malware classique qui reste connecté en permanence est facile à repérer. Vibeware, lui, reste "endormi".
+* **La demande de tâches :** Toutes les X minutes (intervalle aléatoire pour éviter les patterns fixes), l'implant se "réveille" et envoie une requête HTTP chiffrée au serveur FastAPI : *"Ai-je une commande à exécuter ?"*.
+* **Le trafic camouflé :** Ces requêtes ressemblent à du trafic web normal (HTTPS sur le port 443). Pour un pare-feu, cela ressemble à une simple consultation de page web.
+
+---
+
+### 3. Le Cerveau : Le Serveur C2 (FastAPI)
+
+Le serveur central (Command & Control) est le chef d'orchestre.
+
+* **Gestion Asynchrone :** Grâce à FastAPI, le serveur peut gérer des milliers de "réveils" d'implants simultanément sans ralentir.
+* **Base de données des tâches :** Quand l'opérateur veut une action (ex: "Prendre une capture d'écran"), il poste la commande sur le serveur. La commande attend sagement que l'implant se réveille pour la lui transmettre.
+* **Validation des données :** Le serveur utilise Pydantic pour s'assurer que les données reçues de l'implant sont intègres et n'ont pas été modifiées par un expert en cybersécurité qui tenterait d'intercepter le trafic.
+
+---
+
+### 4. L'Exfiltration : Le retour d'information
+
+Une fois que l'implant a exécuté une commande (vol de mots de passe, capture d'écran) :
+
+1. **Chiffrement Local :** L'implant chiffre les données (souvent en AES-256) directement sur la machine victime.
+2. **Fragmentation :** Les données sont découpées en petits morceaux pour ne pas créer un pic de trafic suspect.
+3. **Envoi :** Les morceaux sont envoyés au serveur via les "beacons" suivants.
+4. **Reconstitution :** Le backend FastAPI rassemble les morceaux et les affiche sur le Dashboard JS de l'opérateur.
+
+### En résumé : Pourquoi est-ce "formidable" ?
+
+Vibeware fonctionne sur le principe de la **tromperie**. Il utilise des technologies modernes de haute performance (Rust/FastAPI) pour se fondre dans le bruit numérique d'une entreprise. Il ne force pas la porte, il s'installe discrètement et ne parle que quand c'est nécessaire.
+
+**Souhaitez-vous approfondir un point spécifique, comme les techniques d'évasion (Anti-VM/Anti-Sandbox) que l'implant pourrait utiliser pour savoir s'il est analysé par un chercheur en sécurité ?**
